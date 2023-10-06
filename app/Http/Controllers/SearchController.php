@@ -21,13 +21,10 @@ class SearchController extends Controller
         $query = $request->input('q');
         $cacheKey = 'search_' . md5($query);
 
-        // Check if the data is cached
         if (Cache::has($cacheKey)) {
-            // If cached, return the cached data
             return Cache::get($cacheKey);
         }
 
-        // If not cached, perform the search and cache the results
         $validator = Validator::make(['q' => $query], [
             'q' => 'required|string',
         ]);
