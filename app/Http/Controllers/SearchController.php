@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class SearchController extends Controller
 {
-
     protected ApiService $apiService;
 
     public function __construct(ApiService $apiService)
@@ -30,15 +29,16 @@ class SearchController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => '"q" param is required'], 400);
+            return response()->json(['error' => 'Your input field is empty'], 400);
         }
 
         $filteredResults = $this->apiService->makeRequest($query);
 
-        // Cache the results for future requests (e.g., cache for 1 hour)
-        Cache::put($cacheKey, response()->json($filteredResults), 60);
-
-        return response()->json($filteredResults);
+        if (isset($filteredResults[0]['show']['name'])) {
+            $name = $filteredResults[0]['show']['name'];
+            Cache::put($cacheKey, response()->json($name), 60);
+            return response()->json($name);
+        }
+        return response()->json(['error' => 'No results found'], 404);
     }
-
 }
