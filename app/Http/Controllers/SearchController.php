@@ -29,7 +29,11 @@ class SearchController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => 'Your input field is empty'], 400);
+            return response()->json([
+                'error' => [
+                    'code' => 400,
+                    'error' => 'Your input field is empty.']
+                ],400);
         }
 
         $filteredResults = $this->apiService->makeRequest($query);
@@ -39,6 +43,10 @@ class SearchController extends Controller
             Cache::put($cacheKey, response()->json($name), 60);
             return response()->json($name);
         }
-        return response()->json(['error' => 'No results found'], 404);
+        return response()->json([
+            'error' => [
+                'code' => 404,
+                'error' => 'No results found.']
+        ],404);
     }
 }
