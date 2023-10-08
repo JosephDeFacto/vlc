@@ -30,9 +30,13 @@
                 },
                 error: function (xhr) {
                     resultsId.empty();
-                    let err = JSON.parse(xhr.responseText);
-                    resultsId.append(err.error);
+                    let errorResponse = JSON.parse(xhr.responseText);
+                    let statusCode = xhr.status;
+
+                    resultsId.append("Status Code: " + statusCode + ", Message: " + errorResponse.error.error);
                 }
+
+
             });
         }
 </script>
