@@ -18,15 +18,20 @@
             let q = $('.name-input').val();
             let resultsId = $('#results');
 
+            let searchUrl = '{{ route('search') }}' + '?q=' + encodeURIComponent(q);
+
             $.ajax({
                 type: 'GET',
-                url: '{{ route('search') }}',
+                url: searchUrl,
                 data: {
                     q: q,
                 },
                 success: function (response) {
                     resultsId.empty();
                     resultsId.append(response);
+
+                    window.history.pushState({}, null, searchUrl);
+
                 },
                 error: function (xhr) {
                     resultsId.empty();
@@ -34,9 +39,9 @@
                     let statusCode = xhr.status;
 
                     resultsId.append("Status Code: " + statusCode + ", Message: " + errorResponse.error.error);
+
+                    window.history.pushState({}, null, searchUrl);
                 }
-
-
             });
         }
 </script>
